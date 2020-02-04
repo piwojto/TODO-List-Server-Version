@@ -7,7 +7,7 @@ const todoUrl = "http://195.181.210.249:3000/todo/";
 function main() {
   prepareDOMElements();
   prepareDOMEvents();
-  prepareInitialList(1);
+  prepareInitialList('Initial');
 };
 
 function prepareDOMElements() {
@@ -63,7 +63,7 @@ function prepareDOMEvents() {
 function todoPost() {
 axios.post(todoUrl, {title: input.value
 }).then((response) => {
-    prepareInitialList(0);
+    prepareInitialList('Change');
     input.value='';
 }).catch((err) => {
     console.log('err', err);
@@ -75,11 +75,11 @@ function prepareInitialList(nr) {
   axios.get(todoUrl).then(response=> {
       this.data=response.data;
       this.data.forEach((todo) => {
-      if(nr===1)  
+      if(nr==='Initial')  
           addNewElementToList(todo); 
       currentID=todo.id;
-      $list.lastElementChild.dataset.id=currentID;
       });
+      $list.lastElementChild.dataset.id=currentID;
   }).catch((err) => {
       console.log('err', err);
   });
@@ -114,7 +114,7 @@ function createElement(title) {
   return newElement;
 };
 
-function listClickManager(event/* event- event.target */) { //obsługa zdarzeń na liście
+function listClickManager(event) { //obsługa zdarzeń na liście
   // Rozstrzygnięcie co dokładnie zostało kliknięte i wywołanie odpowiedniej funkcji
   // event.target.parentElement.id
   switch (event.target.className) {
