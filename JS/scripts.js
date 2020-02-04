@@ -7,7 +7,7 @@ const todoUrl = "http://195.181.210.249:3000/todo/";
 function main() {
   prepareDOMElements();
   prepareDOMEvents();
-  prepareInitialList();
+  prepareInitialList(1);
 };
 
 function prepareDOMElements() {
@@ -34,8 +34,6 @@ function prepareDOMEvents() {
       case 'addTodo': {
         if(input.value.trim()!=='') {
           todoPost();
-          todoCheck();
-          todoCheck();
           console.log(currentID);
           createElement(input.value);
           addNewElementToList(input.value);
@@ -65,45 +63,35 @@ function prepareDOMEvents() {
 function todoPost() {
 axios.post(todoUrl, {title: input.value
 }).then((response) => {
-    console.log(response);
+    prepareInitialList(0);
     input.value='';
 }).catch((err) => {
     console.log('err', err);
 })
 };
 
-function todoCheck() {
-axios.get(todoUrl).then(response=> {
-    this.data=response.data;
-    this.data.forEach((todo) => {
-      console.log(todo.title+" ID: "+todo.id);
-      currentID=todo.id;
-      $list.lastElementChild.dataset.id=currentID;
-    });
-}).catch((err) => {
-    console.log('err', err);
-});
-};
-
-function prepareInitialList() {
+function prepareInitialList(nr) {
   // Tutaj utworzymy sobie początkowe todosy. Mogą pochodzić np. z tablicy
   axios.get(todoUrl).then(response=> {
       this.data=response.data;
       this.data.forEach((todo) => {
-        addNewElementToList(todo);
+      if(nr===1)  
+          addNewElementToList(todo); 
+      currentID=todo.id;
+      $list.lastElementChild.dataset.id=currentID;
       });
   }).catch((err) => {
       console.log('err', err);
   });
 };
 
-function addNewElementToList(title   /* Title, author, id */) {
+function addNewElementToList(title) {
   //obsługa dodawanie elementów do listy
   const newElement = createElement(title);
   $list.appendChild(newElement);
 };
 
-function createElement(title /* Title, author, id */) {
+function createElement(title) {
   // Tworzyc reprezentacje DOM elementu return newElement
   // return newElement
   const newElement = document.createElement('li');
